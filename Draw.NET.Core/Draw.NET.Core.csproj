@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Draw.NET.Renderer\Draw.NET.Renderer.csproj" />
+    <ProjectReference Include="..\Draw.NET\Draw.NET.csproj" />
+  </ItemGroup>
+
+</Project>

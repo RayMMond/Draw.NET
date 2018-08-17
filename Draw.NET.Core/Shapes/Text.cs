@@ -33,8 +33,8 @@ namespace Draw.NET.Core.Shapes
             InitializePrimaryPrimitiveAndBound(c, bound);
 
             var b = c.GetBounds();
-            InitializeDefaultAnchor(b);
-            InitializeResizeHandle();
+            InitializeDefaultAnchor(b, primitiveProvider);
+            InitializeResizeHandle(primitiveProvider);
             CanSelect = true;
         }
 
@@ -110,14 +110,14 @@ namespace Draw.NET.Core.Shapes
                 h.Location = __bound.GetBounds().GetCornerPoint(h.Type);
             }
         }
-        protected override void InitializeResizeHandle()
+        protected override void InitializeResizeHandle(IPrimitiveProvider provider)
         {
             var list = Enum.GetValues(typeof(CornerType))
              .Cast<CornerType>().Where(t => t != CornerType.Center);
             var rect = __bound.GetBounds();
             foreach (var item in list)
             {
-                var r = new RectResizeHandle(rect.GetCornerPoint(item), this, item);
+                var r = new RectResizeHandle(rect.GetCornerPoint(item), this, item, provider);
                 ResizeHandles.Add(r);
             }
         }

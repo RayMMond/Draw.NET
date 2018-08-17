@@ -8,6 +8,7 @@
 //
 //修改标识：    
  -----------------------------------------------------------------------------------------------------------*/
+using Draw.NET.Renderer.Primitives;
 using System;
 using System.Drawing;
 
@@ -18,8 +19,8 @@ namespace Draw.NET.Core.Shapes
 
         public CornerType Type { get; private set; }
 
-        public RectResizeHandle(PointF location, AbstractShape parent, CornerType type)
-            : base(location, parent)
+        public RectResizeHandle(PointF location, AbstractShape parent, CornerType type, IPrimitiveProvider provider)
+            : base(location, parent, provider)
         {
             Type = type;
         }
@@ -59,7 +60,7 @@ namespace Draw.NET.Core.Shapes
             throw new NotImplementedException();
         }
 
-        protected override void InitializeResizeHandle()
+        protected override void InitializeResizeHandle(IPrimitiveProvider provider)
         {
             throw new NotImplementedException();
         }

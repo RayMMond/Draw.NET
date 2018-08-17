@@ -52,7 +52,7 @@ namespace Draw.NET.Core.Shapes
             throw new NotImplementedException();
         }
 
-        protected override void InitializeResizeHandle()
+        protected override void InitializeResizeHandle(IPrimitiveProvider provider)
         {
             throw new NotImplementedException();
         }

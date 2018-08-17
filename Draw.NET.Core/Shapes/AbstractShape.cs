@@ -402,20 +402,20 @@ namespace Draw.NET.Core.Shapes
             }
         }
 
-        protected void InitializeDefaultAnchor(RectangleF rect)
+        protected void InitializeDefaultAnchor(RectangleF rect, IPrimitiveProvider provider)
         {
-            var a = new AnchorHandle(rect.GetCornerPoint(CornerType.Top), this, TOP_ANCHOR);
+            var a = new AnchorHandle(rect.GetCornerPoint(CornerType.Top), this, TOP_ANCHOR, provider);
             Anchors.Add(a);
-            a = new AnchorHandle(rect.GetCornerPoint(CornerType.LeftMiddle), this, LEFT_ANCHOR);
+            a = new AnchorHandle(rect.GetCornerPoint(CornerType.LeftMiddle), this, LEFT_ANCHOR, provider);
             Anchors.Add(a);
-            a = new AnchorHandle(rect.GetCornerPoint(CornerType.RightMiddle), this, RIGHT_ANCHOR);
+            a = new AnchorHandle(rect.GetCornerPoint(CornerType.RightMiddle), this, RIGHT_ANCHOR, provider);
             Anchors.Add(a);
-            a = new AnchorHandle(rect.GetCornerPoint(CornerType.Bottom), this, BOTTOM_ANCHOR);
+            a = new AnchorHandle(rect.GetCornerPoint(CornerType.Bottom), this, BOTTOM_ANCHOR, provider);
             Anchors.Add(a);
         }
 
 
-        protected abstract void InitializeResizeHandle();
+        protected abstract void InitializeResizeHandle(IPrimitiveProvider provider);
 
         protected virtual void OnVisibleChanged()
         {

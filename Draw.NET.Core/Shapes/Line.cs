@@ -24,6 +24,7 @@ namespace Draw.NET.Core.Shapes
     public class Line : AbstractShape, IList<PointF>, ICollection<PointF>, IEnumerable<PointF>
     {
         #region 字段、事件声明、属性
+        private IPrimitiveProvider provider;
         private AbstractBrokenLine __line { get { return PrimaryPrimitive as AbstractBrokenLine; } }
 
         protected event EventHandler<PointChangedEventArgs> PointChanged;
@@ -37,8 +38,7 @@ namespace Draw.NET.Core.Shapes
         #region 公开方法
         public Line(IPrimitiveProvider primitiveProvider)
         {
-
-            if (primitiveProvider == null) throw new ArgumentNullException(nameof(primitiveProvider));
+            this.provider = primitiveProvider ?? throw new ArgumentNullException(nameof(primitiveProvider));
             var line = primitiveProvider.GetPrimitive<AbstractLine>();
 
             line.Visible = true;
@@ -134,7 +134,7 @@ namespace Draw.NET.Core.Shapes
         /// <summary>
         /// 初始化Line中的Handle
         /// </summary>
-        protected override void InitializeResizeHandle()
+        protected override void InitializeResizeHandle(IPrimitiveProvider provider)
         {
             PointF prePoint = PointF.Empty;
             List<PointF> allPoints = __line.Points;
@@ -145,9 +145,9 @@ namespace Draw.NET.Core.Shapes
                     float x = (p.X + prePoint.X) / 2;
                     float y = (p.Y + prePoint.Y) / 2;
                     PointF newPoint = new PointF(x, y);
-                    ResizeHandles.Add(new LineResizeHandle(newPoint, this, LineResizeType.MiddlePoint));
+                    ResizeHandles.Add(new LineResizeHandle(newPoint, this, LineResizeType.MiddlePoint, provider));
                 }
-                ResizeHandles.Add(new LineResizeHandle(p, this, LineResizeType.BreakPoint));
+                ResizeHandles.Add(new LineResizeHandle(p, this, LineResizeType.BreakPoint, provider));
                 prePoint = p;
             }
         }
@@ -321,7 +321,7 @@ namespace Draw.NET.Core.Shapes
         {
             ResizeHandles.ForEach(h => h.Dispose());
             ResizeHandles.Clear();
-            InitializeResizeHandle();
+            InitializeResizeHandle(provider);
             IsGraphicsPathChanged = true;
         }
 

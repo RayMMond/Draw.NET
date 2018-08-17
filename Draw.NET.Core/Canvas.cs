@@ -17,7 +17,7 @@ using Draw.NET.Core.Layers;
 using Draw.NET.Core.Mouse;
 using Draw.NET.Core.Shapes;
 using Draw.NET.Renderer;
-
+using Draw.NET.Renderer.Primitives;
 
 namespace Draw.NET.Core
 {
@@ -26,13 +26,12 @@ namespace Draw.NET.Core
     /// </summary>
     public class Canvas : IDisposable, IMessagePipe
     {
-        bool disposedValue = false;
+        private bool disposedValue = false;
 
-        BackgroundLayer __bgLayer;
-        IAbstractRenderer __renderer;
-        MouseManager __mouse;
-        TransformManager __trans;
-        MessagePipe __mp;
+        private BackgroundLayer __bgLayer;
+        private MouseManager __mouse;
+        private TransformManager __trans;
+        private MessagePipe __mp;
 
 
         /// <summary>
@@ -40,10 +39,10 @@ namespace Draw.NET.Core
         /// </summary>
         /// <param name="handle"></param>
         /// <param name="initialSize"></param>
-        public Canvas(IntPtr handle, SizeF initialSize, IAbstractRenderer renderer)
+        public Canvas(IntPtr handle, SizeF initialSize, IAbstractRenderer renderer, IPrimitiveProvider provider)
         {
-
-            __renderer = renderer;
+            Renderer = renderer;
+            Initialize(initialSize, provider);
         }
 
         public event EventHandler<BeginTextingEventArgs> BeginEditingEvent
@@ -70,7 +69,7 @@ namespace Draw.NET.Core
         /// <summary>
         /// 渲染器
         /// </summary>
-        public IAbstractRenderer Renderer { get { return __renderer; } }
+        public IAbstractRenderer Renderer { get; private set; }
 
         public bool IsDisposed { get { return disposedValue; } }
 
@@ -138,7 +137,7 @@ namespace Draw.NET.Core
         {
             if (IsDisposed)
                 return;
-            __renderer.ChangeSize(newSize);
+            Renderer.ChangeSize(newSize);
         }
 
 
@@ -472,20 +471,20 @@ namespace Draw.NET.Core
 
 
 
-        private void Initialize(SizeF initialSize)
+        private void Initialize(SizeF initialSize, IPrimitiveProvider provider)
         {
-            if (__renderer.Configuration.ClientSize != initialSize)
+            if (Renderer.Configuration.ClientSize != initialSize)
             {
-                __renderer.Configuration.ChangeSize(initialSize);
+                Renderer.Configuration.ChangeSize(initialSize);
             }
 
-            __renderer.MessageListener += AllMessageListener;
-            __trans = new TransformManager(__renderer.Configuration);
-            __bgLayer = new BackgroundLayer(__renderer.GetNewLayer(0, BackgroundLayer.NAME), initialSize);
+            Renderer.MessageListener += AllMessageListener;
+            __trans = new TransformManager(Renderer.Configuration);
+            __bgLayer = new BackgroundLayer(Renderer.GetNewLayer(0, BackgroundLayer.NAME), initialSize);
             __mp = new MessagePipe(this);
             var ul = new List<UserLayer>();
-            ul.Add(new UserLayer(__renderer.GetNewLayer(1, UserLayer.DEFAULT_NAME)));
-            var ol = new OperationLayer(__renderer.GetNewLayer(99, OperationLayer.NAME));
+            ul.Add(new UserLayer(Renderer.GetNewLayer(1, UserLayer.DEFAULT_NAME)));
+            var ol = new OperationLayer(Renderer.GetNewLayer(99, OperationLayer.NAME), provider);
             __mouse = new MouseManager(ul, ol);
             __mouse.MessageListener += AllMessageListener;
             //__mouse.CursorChanged += Mouse_CursorChanged;
@@ -512,13 +511,13 @@ namespace Draw.NET.Core
             {
                 if (disposing)
                 {
-                    __renderer.Dispose();
+                    Renderer.Dispose();
                     __mouse.Dispose();
                     __bgLayer.Dispose();
                     __trans.Dispose();
                     __mp.Dispose();
                 }
-                __renderer = null;
+                Renderer = null;
                 __mouse = null;
                 __bgLayer = null;
                 __trans = null;

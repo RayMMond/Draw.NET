@@ -133,8 +133,7 @@ namespace Draw.NET
         {
             PointF p1 = new PointF(rect.Right, rect.Bottom);
             PointF p2 = rect.Location;
-            float a, b;
-            GetLineABValue(p1, p2, out a, out b);
+            GetLineABValue(p1, p2, out float a, out float b);
             RectangleF result;
             if (p.Y >= p1.Y && p.X >= p1.X)
             {
@@ -170,8 +169,7 @@ namespace Draw.NET
         {
             PointF p1 = new PointF(rect.Right, rect.Y);
             PointF p2 = new PointF(rect.X, rect.Bottom);
-            float a, b;
-            GetLineABValue(p1, p2, out a, out b);
+            GetLineABValue(p1, p2, out float a, out float b);
 
             RectangleF result;
             if (p.Y <= p1.Y && p.X >= p1.X)
@@ -208,8 +206,7 @@ namespace Draw.NET
         {
             PointF p1 = new PointF(rect.X, rect.Y);
             PointF p2 = new PointF(rect.Right, rect.Bottom);
-            float a, b;
-            GetLineABValue(p1, p2, out a, out b);
+            GetLineABValue(p1, p2, out float a, out float b);
 
             RectangleF result;
             if (p.Y <= p1.Y && p.X <= p1.X)
@@ -246,8 +243,7 @@ namespace Draw.NET
         {
             PointF p1 = new PointF(rect.X, rect.Bottom);
             PointF p2 = new PointF(rect.Right, rect.Y);
-            float a, b;
-            GetLineABValue(p1, p2, out a, out b);
+            GetLineABValue(p1, p2, out float a, out float b);
 
             RectangleF result;
             if (p.Y >= p1.Y && p.X <= p1.X)

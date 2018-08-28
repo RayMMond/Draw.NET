@@ -16,7 +16,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using Draw.NET.Renderer;
 using Draw.NET.Renderer.Primitives;
-using Draw.NET.Renderer.Styles;
+
 using Draw.NET.Core.Shapes;
 
 namespace Draw.NET.Core.Shapes
@@ -24,7 +24,7 @@ namespace Draw.NET.Core.Shapes
     public class Line : AbstractShape, IList<PointF>, ICollection<PointF>, IEnumerable<PointF>
     {
         #region 字段、事件声明、属性
-        private IPrimitiveProvider provider;
+        private readonly IPrimitiveProvider provider;
         private AbstractBrokenLine __line { get { return PrimaryPrimitive as AbstractBrokenLine; } }
 
         protected event EventHandler<PointChangedEventArgs> PointChanged;
@@ -343,8 +343,8 @@ namespace Draw.NET.Core.Shapes
             {
                 int prePIndex = -1;
                 int nextPIndex = -1;
-                eAlignType alignType1 = eAlignType.NotAlign;
-                eAlignType alignType2 = eAlignType.NotAlign;
+                AlignType alignType1 = AlignType.NotAlign;
+                AlignType alignType2 = AlignType.NotAlign;
                 if (pIndex == 0)
                 {
                     nextPIndex = 1;
@@ -379,7 +379,7 @@ namespace Draw.NET.Core.Shapes
         {
             int prePointIndex = handleIndex / 2;
             int nextPointIndex = handleIndex / 2 + 1;
-            eAlignType alignType = GetAlignType(prePointIndex, nextPointIndex);
+            AlignType alignType = GetAlignType(prePointIndex, nextPointIndex);
             if (special)
             {
                 MovePointByAlignType(alignType, prePointIndex, vector);
@@ -398,25 +398,25 @@ namespace Draw.NET.Core.Shapes
         /// <param name="p1Index">端点1</param>
         /// <param name="p2Index">端点2</param>
         /// <returns>对齐方式</returns>
-        private eAlignType GetAlignType(int p1Index, int p2Index)
+        private AlignType GetAlignType(int p1Index, int p2Index)
         {
             PointF p1 = __line[p1Index];
             PointF p2 = __line[p2Index];
             if (p1.X == p2.X && p1.Y != p2.Y)
             {
-                return eAlignType.Vertical;
+                return AlignType.Vertical;
             }
             else if (p1.X != p2.X && p1.Y == p2.Y)
             {
-                return eAlignType.Horizontal;
+                return AlignType.Horizontal;
             }
             else if (p1.X == p2.X && p1.Y == p2.Y)
             {
-                return eAlignType.SamePoint;
+                return AlignType.SamePoint;
             }
             else
             {
-                return eAlignType.NotAlign;
+                return AlignType.NotAlign;
             }
         }
 
@@ -426,21 +426,21 @@ namespace Draw.NET.Core.Shapes
         /// <param name="alignType">对齐方式</param>
         /// <param name="pointIndex">端点索引</param>
         /// <param name="vector">鼠标移动的矩形大小</param>
-        private void MovePointByAlignType(eAlignType alignType, int pointIndex, SizeF vector)
+        private void MovePointByAlignType(AlignType alignType, int pointIndex, SizeF vector)
         {
             if (pointIndex == -1) return;
             PointF p = __line[pointIndex];
 
             switch (alignType)
             {
-                case eAlignType.Horizontal:
+                case AlignType.Horizontal:
                     __line[pointIndex] = p + new SizeF(0, vector.Height);
                     break;
-                case eAlignType.SamePoint:
-                case eAlignType.Vertical:
+                case AlignType.SamePoint:
+                case AlignType.Vertical:
                     __line[pointIndex] = p + new SizeF(vector.Width, 0);
                     break;
-                case eAlignType.NotAlign:
+                case AlignType.NotAlign:
                 default:
                     __line[pointIndex] = p + vector;
                     break;
@@ -483,7 +483,7 @@ namespace Draw.NET.Core.Shapes
             }
         }
 
-        enum eAlignType
+        enum AlignType
         {
             Horizontal,
             Vertical,

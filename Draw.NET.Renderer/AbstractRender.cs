@@ -9,12 +9,10 @@
 //修改标识：    
  -----------------------------------------------------------------------------------------------------------*/
 using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
 
 namespace Draw.NET.Renderer
@@ -22,7 +20,7 @@ namespace Draw.NET.Renderer
     /// <summary>
     /// 抽象渲染器，负责对图层的渲染和管理
     /// </summary>
-    public abstract class AbstractRenderer : IAbstractRenderer
+    public abstract class AbstractRenderer : IRenderer
     {
         protected MessagePipe __messagePipe;
         protected ConcurrentQueue<Action> __cmdList;
@@ -45,13 +43,20 @@ namespace Draw.NET.Renderer
             __mres = new ManualResetEventSlim(false);
             __cmdList = new ConcurrentQueue<Action>();
             __messagePipe = new MessagePipe(this);
-            __renderingThread = new Thread(new ThreadStart(RenderingLoop));
-            __renderingThread.IsBackground = true;
+            __renderingThread = new Thread(new ThreadStart(RenderingLoop))
+            {
+                IsBackground = true
+            };
 
             Configuration = new RenderConfig();
             Configuration.ClientSizeChanged += Configuration_ClientSizeChanged;
         }
 
+
+        public virtual void Initialize(IntPtr handle, SizeF initialSize)
+        {
+
+        }
 
 
         /// <summary>
@@ -137,14 +142,14 @@ namespace Draw.NET.Renderer
         //}
 
         #region Layer 管理
-        
+
         /// <summary>
         /// 新建一个图层并返回
         /// </summary>
         /// <param name="index">图层索引</param>
         /// <param name="name">图层名称</param>
         /// <returns>新图层</returns>
-        public Layer GetNewLayer(int index = 0, string name = "")
+        public ILayer<IPrimitive> GetNewLayer(int index = 0, string name = "")
         {
             var layer = new Layer(__cmdList, Configuration)
             {
@@ -164,7 +169,7 @@ namespace Draw.NET.Renderer
         /// </summary>
         /// <param name="l">需要删除的图层</param>
         /// <returns>成功删除返回true，反之返回false</returns>
-        public void RemoveLayer(Layer l)
+        public void RemoveLayer(ILayer<IPrimitive> l)
         {
             if (Configuration.UseMultiThreaded)
             {
@@ -177,7 +182,7 @@ namespace Draw.NET.Renderer
 
         }
 
-        private void _RemoveLayer(Layer l)
+        private void _RemoveLayer(ILayer<IPrimitive> l)
         {
             var _l = __layers.FirstOrDefault(s => s.Equals(l));
             if (_l != null)
@@ -193,7 +198,7 @@ namespace Draw.NET.Renderer
         /// </summary>
         /// <param name="id">图层ID</param>
         /// <returns>需要获取的图层对象</returns>
-        public Layer GetLayerByID(string id)
+        public ILayer<IPrimitive> GetLayerByID(string id)
         {
             if (!string.IsNullOrWhiteSpace(id))
             {
@@ -223,9 +228,9 @@ namespace Draw.NET.Renderer
         /// 获取所有Layer
         /// </summary>
         /// <returns>所有图层列表</returns>
-        public List<Layer> GetLayers()
+        public List<ILayer<IPrimitive>> GetLayers()
         {
-            return new List<Layer>(__layers);
+            return new List<ILayer<IPrimitive>>(__layers);
         }
 
         #endregion
@@ -257,7 +262,10 @@ namespace Draw.NET.Renderer
             foreach (var layer in __layers)
             {
                 if (layer.IsDisposed)
+                {
                     continue;
+                }
+
                 if (layer.Visible)
                 {
                     var primitives = layer.GetAll();
@@ -334,19 +342,28 @@ namespace Draw.NET.Renderer
                             ExecuteRenderCommand();
                             Thread.Sleep(30);
                             if (__cmdList.Count == 0)
+                            {
                                 __cmdList.Enqueue(() => _RenderOnce(default(RectangleF)));
+                            }
+
                             break;
                         case RenderMode.FPS60:
                             ExecuteRenderCommand();
                             Thread.Sleep(15);
                             if (__cmdList.Count == 0)
+                            {
                                 __cmdList.Enqueue(() => _RenderOnce(default(RectangleF)));
+                            }
+
                             break;
                         case RenderMode.FPSCustom:
                             ExecuteRenderCommand();
                             Thread.Sleep((ushort)(1000 / Configuration.FPS));
                             if (__cmdList.Count == 0)
+                            {
                                 __cmdList.Enqueue(() => _RenderOnce(default(RectangleF)));
+                            }
+
                             break;
                         default:
                             break;
@@ -367,9 +384,10 @@ namespace Draw.NET.Renderer
         {
             while (__cmdList.Count > 0)
             {
-                Action cmd;
-                if (__cmdList.TryDequeue(out cmd))
+                if (__cmdList.TryDequeue(out Action cmd))
+                {
                     cmd.Invoke();
+                }
             }
         }
 
@@ -410,7 +428,10 @@ namespace Draw.NET.Renderer
             while ((__renderingThread.ThreadState & ThreadState.Stopped) != ThreadState.Stopped)
             {
                 if ((__renderingThread.ThreadState & ThreadState.Unstarted) == ThreadState.Unstarted)
+                {
                     break;
+                }
+
                 __mres.Set();
                 Thread.Sleep(5);
             }
@@ -419,9 +440,10 @@ namespace Draw.NET.Renderer
             {
                 if (disposing)
                 {
-                    Action a;
                     while (__cmdList.Count > 0)
-                        __cmdList.TryDequeue(out a);
+                    {
+                        __cmdList.TryDequeue(out Action a);
+                    }
 
                     Configuration.Dispose();
                     __messagePipe.Dispose();

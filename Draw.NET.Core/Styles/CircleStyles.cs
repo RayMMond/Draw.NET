@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Draw.NET.Renderer.Primitives;
-using Draw.NET.Renderer.Styles;
+
 
 namespace Draw.NET.Core.Styles
 {

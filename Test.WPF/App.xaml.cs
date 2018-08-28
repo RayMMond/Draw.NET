@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Draw.NET;
+using Draw.NET.Core;
+using Draw.NET.Renderer.GDIPlus.Primitive;
+using Draw.NET.Renderer.Primitives;
+using SimpleInjector;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +18,17 @@ namespace Test.WPF
     /// </summary>
     public partial class App : Application
     {
+        public static Container Container { get; }
+
+        static App()
+        {
+            Container = new Container();
+            Container.Register<IPrimitiveProvider, GDIPrimitiveProvider>(Lifestyle.Singleton);
+            Container.Register<IRenderer, GDIPlusRenderer>(Lifestyle.Singleton);
+            Container.Register<ICanvas, Canvas>(Lifestyle.Singleton);
+            Container.Verify();
+
+
+        }
     }
 }

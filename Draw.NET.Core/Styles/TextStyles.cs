@@ -1,4 +1,4 @@
-﻿using Draw.NET.Renderer.Styles;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;

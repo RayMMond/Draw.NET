@@ -14,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing.Drawing2D;
 
-namespace Draw.NET.Renderer.Styles
+namespace Draw.NET
 {
     /// <summary>
     /// 边框样式类

@@ -16,7 +16,7 @@ using System.Linq;
 using System.Text;
 using Draw.NET.Renderer;
 using Draw.NET.Renderer.Primitives;
-using Draw.NET.Renderer.Styles;
+
 
 
 
@@ -31,7 +31,7 @@ namespace Draw.NET.Core.Shapes
             : this(new PointF(0, 0), new SizeF(1, 1), primitiveProvider)
         { }
 
-        public Rect(PointF location, SizeF size, IPrimitiveProvider primitiveProvider)
+        protected Rect(PointF location, SizeF size, IPrimitiveProvider primitiveProvider)
         {
             if (primitiveProvider == null) throw new ArgumentNullException(nameof(primitiveProvider));
 

@@ -21,7 +21,7 @@ namespace Draw.NET.Renderer
     /// <summary>
     /// 图层，所有图元都属于一个图层，图层是用于管理图元对象的组织结构
     /// </summary>
-    public class Layer : IMessagePipe, ILayer<AbstractPrimitive>
+    public class Layer : IMessagePipe, ILayer<IPrimitive>
     {
         protected MessagePipe __messagePipe;
         private bool disposedValue = false;
@@ -29,7 +29,7 @@ namespace Draw.NET.Renderer
         /// <summary>
         /// 图层中的图元
         /// </summary>
-        protected List<AbstractPrimitive> primitives;
+        protected List<IPrimitive> primitives;
         private ConcurrentQueue<Action> __cmdList;
         private RenderConfig __config;
 
@@ -43,7 +43,7 @@ namespace Draw.NET.Renderer
             UUID = Guid.NewGuid().ToString();
             __cmdList = cmdList;
             __config = config;
-            primitives = new List<AbstractPrimitive>();
+            primitives = new List<IPrimitive>();
             __messagePipe = new MessagePipe(this);
         }
 
@@ -94,7 +94,7 @@ namespace Draw.NET.Renderer
         /// 添加图元对象
         /// </summary>
         /// <param name="primitives">图元对象</param>
-        public void Add(params AbstractPrimitive[] primitives)
+        public void Add(params IPrimitive[] primitives)
         {
             if (primitives != null)
             {
@@ -112,7 +112,7 @@ namespace Draw.NET.Renderer
         /// 添加图元对象
         /// </summary>
         /// <param name="primitives">图元对象</param>
-        public void Add(List<AbstractPrimitive> primitives)
+        public void Add(List<IPrimitive> primitives)
         {
             Add(primitives?.ToArray());
         }
@@ -122,7 +122,7 @@ namespace Draw.NET.Renderer
         /// </summary>
         /// <param name="id">图元ID</param>
         /// <returns>查找到的图元对象，如果没有找到返回null</returns>
-        public AbstractPrimitive GetByID(string id)
+        public IPrimitive GetByID(string id)
         {
             if (!string.IsNullOrWhiteSpace(id))
             {
@@ -155,7 +155,7 @@ namespace Draw.NET.Renderer
         /// </summary>
         /// <param name="primitive">需要去除的图元对象</param>
         /// <returns>如果去除成功返回true,反之返回false</returns>
-        public bool Remove(AbstractPrimitive primitive)
+        public bool Remove(IPrimitive primitive)
         {
             var _s = primitives.FirstOrDefault(s => s.Equals(primitive));
             if (_s != null)
@@ -189,9 +189,9 @@ namespace Draw.NET.Renderer
         /// 所有本图层的所有图元
         /// </summary>
         /// <returns>所有图元列表</returns>
-        public List<AbstractPrimitive> GetAll()
+        public List<IPrimitive> GetAll()
         {
-            return new List<AbstractPrimitive>(primitives);
+            return new List<IPrimitive>(primitives);
         }
 
 

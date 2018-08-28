@@ -29,7 +29,7 @@ namespace Draw.NET.Core.Layers
 
         public const string NAME = "OperationLayer";
 
-        public OperationLayer(ILayer<AbstractPrimitive> layer, IPrimitiveProvider primitiveProvider)
+        public OperationLayer(ILayer<IPrimitive> layer, IPrimitiveProvider primitiveProvider)
             : base(layer)
         {
             if (primitiveProvider == null) throw new ArgumentNullException(nameof(primitiveProvider));

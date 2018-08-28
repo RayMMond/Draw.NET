@@ -153,7 +153,7 @@ namespace Draw.NET.Core.Shapes
             using (var gp = new GraphicsPath())
             {
                 gp.AddEllipse(__ellipse.GetBounds());
-                if (FillPattern.FillType == Renderer.Styles.FillType.None)
+                if (FillPattern.FillType == FillType.None)
                 {
                     gp.Widen(WidenPen);
                 }

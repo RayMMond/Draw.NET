@@ -16,7 +16,7 @@ using System.Text;
 using Draw.NET.Core.Shapes;
 using Draw.NET.Renderer;
 using Draw.NET.Renderer.Primitives;
-using Draw.NET.Renderer.Styles;
+
 
 namespace Draw.NET.Core.Layers
 {
@@ -29,7 +29,7 @@ namespace Draw.NET.Core.Layers
         public const string NAME = "BackgroundLayer";
 
 
-        public BackgroundLayer(ILayer<AbstractPrimitive> layer, SizeF initialSize)
+        public BackgroundLayer(ILayer<IPrimitive> layer, SizeF initialSize)
             : base(layer)
         {
             __size = initialSize;
@@ -61,7 +61,7 @@ namespace Draw.NET.Core.Layers
         }
 
 
-        private void UpdateLayer(ILayer<AbstractPrimitive> layer, SizeF size)
+        private void UpdateLayer(ILayer<IPrimitive> layer, SizeF size)
         {
             layer.Clear();
             //TODO:根据背景属性，添加背景图元

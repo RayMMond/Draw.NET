@@ -14,7 +14,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace Draw.NET.Renderer.Styles
+namespace Draw.NET
 {
     public abstract class FillPattern : StyleBase
     {
@@ -55,8 +55,7 @@ namespace Draw.NET.Renderer.Styles
         {
             public override void Load(FillPattern pattern)
             {
-                var s = pattern as Solid;
-                if (s != null)
+                if (pattern is Solid s)
                 {
                     Color = s.Color;
                 }
@@ -124,8 +123,7 @@ namespace Draw.NET.Renderer.Styles
             public override void Load(FillPattern pattern)
             {
                 image?.Dispose();
-                var t = pattern as Texture;
-                if (t != null)
+                if (pattern is Texture t)
                 {
                     image = t.image;
                 }

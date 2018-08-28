@@ -21,10 +21,10 @@ namespace Draw.NET.Core.Layers
 {
     public abstract class AbstractShapeLayer : ILayer<AbstractShape>, IDisposable
     {
-        protected ILayer<AbstractPrimitive> __layer;
+        protected ILayer<IPrimitive> __layer;
         protected List<AbstractShape> __shapes = new List<AbstractShape>();
 
-        protected AbstractShapeLayer(ILayer<AbstractPrimitive> layer)
+        protected AbstractShapeLayer(ILayer<IPrimitive> layer)
         {
             __layer = layer;
         }

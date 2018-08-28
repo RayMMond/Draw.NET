@@ -15,7 +15,6 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using Draw.NET.Renderer.Primitives;
-using Draw.NET.Renderer.Styles;
 
 namespace Draw.NET.Core.Shapes
 {
@@ -266,7 +265,7 @@ namespace Draw.NET.Core.Shapes
         /// 添加到指定Layer中
         /// </summary>
         /// <param name="layer"></param>
-        public virtual void AddToLayer(Renderer.ILayer<AbstractPrimitive> layer)
+        public virtual void AddToLayer(ILayer<IPrimitive> layer)
         {
             layer.Add(PrimaryPrimitive);
         }
@@ -275,13 +274,13 @@ namespace Draw.NET.Core.Shapes
         /// 从指定Layer中删除
         /// </summary>
         /// <param name="layer"></param>
-        public virtual void RemoveFromLayer(Renderer.ILayer<AbstractPrimitive> layer)
+        public virtual void RemoveFromLayer(ILayer<IPrimitive> layer)
         {
             layer.Remove(PrimaryPrimitive);
         }
 
 
-        public virtual void AddOperationShapeToLayer(Renderer.ILayer<AbstractPrimitive> layer)
+        public virtual void AddOperationShapeToLayer(ILayer<IPrimitive> layer)
         {
             if (__bound != null)
             {
@@ -295,7 +294,7 @@ namespace Draw.NET.Core.Shapes
         /// 从指定Layer中删除
         /// </summary>
         /// <param name="layer"></param>
-        public virtual void RemoveOperationShapeFromLayer(Renderer.ILayer<AbstractPrimitive> layer)
+        public virtual void RemoveOperationShapeFromLayer(ILayer<IPrimitive> layer)
         {
             Anchors.ForEach(a => a.RemoveFromLayer(layer));
             ResizeHandles.ForEach(a => a.RemoveFromLayer(layer));

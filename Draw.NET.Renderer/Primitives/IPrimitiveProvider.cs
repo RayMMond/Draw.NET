@@ -7,8 +7,8 @@ namespace Draw.NET.Renderer.Primitives
 {
     public interface IPrimitiveProvider
     {
-        T GetPrimitive<T>(PointF location, SizeF size);
+        T GetPrimitive<T>(PointF location, SizeF size) where T : AbstractPrimitive;
 
-        T GetPrimitive<T>();
+        T GetPrimitive<T>() where T : AbstractPrimitive;
     }
 }

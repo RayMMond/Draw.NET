@@ -27,7 +27,7 @@ namespace Draw.NET.Core.Layers
 
 
 
-        public UserLayer(ILayer<AbstractPrimitive> layer)
+        public UserLayer(ILayer<IPrimitive> layer)
             : base(layer)
         {
 

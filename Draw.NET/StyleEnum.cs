@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Draw.NET.Renderer.Styles
+namespace Draw.NET
 {
     /// <summary>
     /// 边框线条类型

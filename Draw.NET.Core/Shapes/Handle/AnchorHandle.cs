@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text;
 using Draw.NET.Renderer;
 using Draw.NET.Renderer.Primitives;
-using Draw.NET.Renderer.Styles;
+
 
 
 namespace Draw.NET.Core.Shapes

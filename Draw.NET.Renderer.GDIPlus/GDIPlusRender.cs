@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Draw.NET.Renderer;
 
 namespace Draw.NET.Renderer.GDIPlus.Primitive
 {
@@ -15,7 +10,7 @@ namespace Draw.NET.Renderer.GDIPlus.Primitive
         private Graphics __graphics;
         private BufferedGraphics __bufferedGraphics;
         private BufferedGraphicsContext __context;
-        private readonly bool __disposeContext = true;
+        private bool __disposeContext = true;
 
         private IntPtr __handle;
 
@@ -23,9 +18,12 @@ namespace Draw.NET.Renderer.GDIPlus.Primitive
         public static readonly bool DOUBLE_BUFFERED = true;
         private bool __initialized;
 
-        public GDIPlusRenderer(IntPtr handle, SizeF initialSize) : base()
+        public GDIPlusRenderer() : base()
         {
+        }
 
+        public override void Initialize(IntPtr handle, SizeF initialSize)
+        {
             if (DOUBLE_BUFFERED)
             {
                 __context = new BufferedGraphicsContext();
@@ -56,9 +54,8 @@ namespace Draw.NET.Renderer.GDIPlus.Primitive
             __graphics.SmoothingMode = SmoothingMode.Default;
             //__graphics.TextContrast
             __graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
+            base.Initialize(handle, initialSize);
         }
-
-
 
         /// <summary>
         /// 渲染一次

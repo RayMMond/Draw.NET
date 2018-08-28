@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Draw.NET.Renderer
+namespace Draw.NET
 {
     public interface ILayer<T> : IDisposable
     {

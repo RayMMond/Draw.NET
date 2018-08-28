@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.ComponentModel;
-using Draw.NET.Renderer.Styles;
 
 namespace Draw.NET.Renderer.Primitives
 {
     /// <summary>
     /// 抽象图元基类
     /// </summary>
-    public abstract class AbstractPrimitive : IMessagePipe, IStyle, INotifyPropertyChanged, IDisposable
+    public abstract class AbstractPrimitive : IPrimitive
     {
         protected MessagePipe __messagePipe;
 
@@ -67,11 +66,11 @@ namespace Draw.NET.Renderer.Primitives
 
 
 
-        protected Layer layer;
+        protected ILayer<IPrimitive> layer;
         /// <summary>
         /// 所属图层
         /// </summary>
-        public Layer Layer
+        public ILayer<IPrimitive> Layer
         {
             get { return layer; }
             set

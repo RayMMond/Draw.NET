@@ -14,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using Draw.NET.Core.Shapes;
-using Draw.NET.Renderer.Styles;
+
 
 namespace Draw.NET.Core.Styles
 {

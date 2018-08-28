@@ -12,7 +12,7 @@ using System;
 using System.Drawing;
 using Draw.NET.Renderer;
 using Draw.NET.Renderer.Primitives;
-using Draw.NET.Renderer.Styles;
+
 
 namespace Draw.NET.Core.Shapes
 {
@@ -66,8 +66,7 @@ namespace Draw.NET.Core.Shapes
 
         protected override void OnLocationChanged(SizeF diff)
         {
-            var rect = PrimaryPrimitive as AbstractRectangle;
-            if (rect != null)
+            if (PrimaryPrimitive is AbstractRectangle rect)
             {
                 rect.Location = new PointF(Location.X - HANDLE_SIZE, Location.Y - HANDLE_SIZE);
             }

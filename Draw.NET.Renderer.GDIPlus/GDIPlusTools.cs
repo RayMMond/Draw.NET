@@ -8,7 +8,6 @@
 //
 //修改标识：    
  -----------------------------------------------------------------------------------------------------------*/
-using Draw.NET.Renderer.Styles;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -68,9 +67,8 @@ namespace Draw.NET.Renderer.GDIPlus.Primitive
             rendering = true;
             try
             {
-                if (state is PrepareArgs)
+                if (state is PrepareArgs arg)
                 {
-                    var arg = (PrepareArgs)state;
 
                     //if (clip != null)
                     //{
@@ -103,9 +101,8 @@ namespace Draw.NET.Renderer.GDIPlus.Primitive
             rendering = true;
             try
             {
-                if (state is DrawingArgs)
+                if (state is DrawingArgs arg)
                 {
-                    var arg = (DrawingArgs)state;
                     Drawing?.Invoke(arg);
                 }
                 else
@@ -191,14 +188,16 @@ namespace Draw.NET.Renderer.GDIPlus.Primitive
 
         private Pen GetNewPen(IStyle s)
         {
-            var pen = new Pen(s.BorderPattern.Color, s.BorderPattern.Width);
-            pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
-            //pen.CustomEndCap = border.DashCap;
-            // pen.CustomStartCap
-            pen.DashCap = s.BorderPattern.DashCap;
-            //pen.DashOffset = 
-            //pen.DashPattern = 
-            pen.DashStyle = s.BorderPattern.DashStyle;
+            var pen = new Pen(s.BorderPattern.Color, s.BorderPattern.Width)
+            {
+                Alignment = System.Drawing.Drawing2D.PenAlignment.Center,
+                //pen.CustomEndCap = border.DashCap;
+                // pen.CustomStartCap
+                DashCap = s.BorderPattern.DashCap,
+                //pen.DashOffset = 
+                //pen.DashPattern = 
+                DashStyle = s.BorderPattern.DashStyle
+            };
             //pen.EndCap
             //pen.LineJoin=
             //pen.MiterLimit =

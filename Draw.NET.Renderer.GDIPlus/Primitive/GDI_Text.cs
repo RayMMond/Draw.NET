@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Draw.NET.Renderer.GDIPlus.Primitive
 {
-    public class GDI_Text : Renderer.Primitives.AbstractText
+    public class GDI_Text : Primitives.AbstractText
     {
         GDIPlusTools tools;
         Font font;
@@ -32,10 +32,12 @@ namespace Draw.NET.Renderer.GDIPlus.Primitive
             //tools.Preparing += Tools_Preparing;
             PropertyChanged += GDI_Text_PropertyChanged;
             font = new Font(FamilyName, FontSize, GraphicsUnit.Pixel);
-            sf = new StringFormat();
-            sf.Alignment = alignment;
-            sf.LineAlignment = lineAlignment;
-            sf.Trimming = trimming;
+            sf = new StringFormat
+            {
+                Alignment = alignment,
+                LineAlignment = lineAlignment,
+                Trimming = trimming
+            };
             brush = new SolidBrush(textColor);
         }
 

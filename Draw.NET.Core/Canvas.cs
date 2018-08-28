@@ -8,23 +8,22 @@
 //
 //修改标识：    
  -----------------------------------------------------------------------------------------------------------*/
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using Draw.NET.Core.Layers;
 using Draw.NET.Core.Mouse;
 using Draw.NET.Core.Shapes;
 using Draw.NET.Renderer;
 using Draw.NET.Renderer.Primitives;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 
 namespace Draw.NET.Core
 {
     /// <summary>
     /// 画布对象
     /// </summary>
-    public class Canvas : IDisposable, IMessagePipe
+    public class Canvas : ICanvas
     {
         private bool disposedValue = false;
 
@@ -32,6 +31,7 @@ namespace Draw.NET.Core
         private MouseManager __mouse;
         private TransformManager __trans;
         private MessagePipe __mp;
+        private readonly IPrimitiveProvider primitiveProvider;
 
 
         /// <summary>
@@ -39,10 +39,10 @@ namespace Draw.NET.Core
         /// </summary>
         /// <param name="handle"></param>
         /// <param name="initialSize"></param>
-        public Canvas(IntPtr handle, SizeF initialSize, IAbstractRenderer renderer, IPrimitiveProvider provider)
+        public Canvas(IRenderer renderer, IPrimitiveProvider provider)
         {
+            primitiveProvider = provider ?? throw new ArgumentNullException(nameof(provider));
             Renderer = renderer;
-            Initialize(initialSize, provider);
         }
 
         public event EventHandler<BeginTextingEventArgs> BeginEditingEvent
@@ -69,11 +69,22 @@ namespace Draw.NET.Core
         /// <summary>
         /// 渲染器
         /// </summary>
-        public IAbstractRenderer Renderer { get; private set; }
+        public IRenderer Renderer { get; private set; }
 
         public bool IsDisposed { get { return disposedValue; } }
 
+        public void Load(IntPtr handle, SizeF initialSize)
+        {
+            Renderer.Initialize(handle, initialSize);
+            Initialize(initialSize, primitiveProvider);
 
+        }
+
+        public void Load(IntPtr handle, Size initialSize)
+        {
+            Renderer.Initialize(handle, initialSize);
+            Initialize(initialSize, primitiveProvider);
+        }
 
         /// <summary>
         /// 将图层居中缩放
@@ -82,13 +93,18 @@ namespace Draw.NET.Core
         public void Fit(string layerID = null)
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             RectangleF bounds = RectangleF.Empty;
             if (!string.IsNullOrWhiteSpace(layerID))
             {
                 var layer = __mouse.UserLayers.FirstOrDefault(l => l.UUID == layerID);
                 if (layer != null)
+                {
                     bounds = layer.GetBounds();
+                }
             }
             else
             {
@@ -136,7 +152,10 @@ namespace Draw.NET.Core
         public void ChangeSize(SizeF newSize)
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             Renderer.ChangeSize(newSize);
         }
 
@@ -152,7 +171,10 @@ namespace Draw.NET.Core
         {
             actualPoint = Point.Empty;
             if (IsDisposed)
+            {
                 return null;
+            }
+
             actualPoint = __trans.GetActualPoint(pt);
             return __mouse.MouseDown(actualPoint);
         }
@@ -167,7 +189,10 @@ namespace Draw.NET.Core
         {
             actualPoint = Point.Empty;
             if (IsDisposed)
+            {
                 return null;
+            }
+
             actualPoint = __trans.GetActualPoint(pt);
             var list = __mouse.MouseMove(actualPoint);
             if (__mouse.IsPressed)
@@ -180,7 +205,10 @@ namespace Draw.NET.Core
         public void ResetMouse()
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             __mouse.ResetMouse();
         }
 
@@ -188,7 +216,10 @@ namespace Draw.NET.Core
         {
             actualPoint = Point.Empty;
             if (IsDisposed)
+            {
                 return;
+            }
+
             actualPoint = __trans.GetActualPoint(pt);
             __mouse.MouseUp(actualPoint);
             Renderer.Render();
@@ -199,7 +230,10 @@ namespace Draw.NET.Core
         {
             actualPoint = Point.Empty;
             if (IsDisposed)
+            {
                 return null;
+            }
+
             actualPoint = __trans.GetActualPoint(pt);
             return __mouse.MouseDoubleClick(actualPoint);
         }
@@ -214,7 +248,9 @@ namespace Draw.NET.Core
         public void BeginDrag(PointF pt)
         {
             if (IsDisposed)
+            {
                 return;
+            }
 
             //__mouse.SetCursor(__mouse.DRAGGING);
             __trans.BeginMove(pt);
@@ -226,7 +262,10 @@ namespace Draw.NET.Core
         public void Dragging(PointF pt)
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             __trans.Move(pt);
             Renderer.Render();
         }
@@ -236,7 +275,9 @@ namespace Draw.NET.Core
         public void EndDrag()
         {
             if (IsDisposed)
+            {
                 return;
+            }
             //__mouse.SetCursor(__mouse.DEFAULT);
             __trans.EndMove();
             Renderer.Render();
@@ -267,7 +308,9 @@ namespace Draw.NET.Core
         public void Scale(PointF pt, float scale)
         {
             if (IsDisposed)
+            {
                 return;
+            }
             //if (scale >= 1F)
             //{
             //    __mouse.SetCursor(__mouse.ZOOM_OUT);
@@ -287,45 +330,66 @@ namespace Draw.NET.Core
         public void AutoAlign()
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             throw new NotImplementedException();
         }
 
         public void AlignLeft()
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             throw new NotImplementedException();
         }
 
         public void AlignCenter()
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             throw new NotImplementedException();
         }
         public void AlignRight()
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             throw new NotImplementedException();
         }
         public void AlignTop()
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             throw new NotImplementedException();
         }
         public void AlignMiddle()
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             throw new NotImplementedException();
         }
         public void AlignBottom()
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             throw new NotImplementedException();
         }
 
@@ -335,21 +399,30 @@ namespace Draw.NET.Core
         public void AutoSpace()
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             throw new NotImplementedException();
         }
 
         public void DistributeVertically()
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             throw new NotImplementedException();
         }
 
         public void DistributeHorizonally()
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             throw new NotImplementedException();
         }
         #endregion
@@ -361,7 +434,9 @@ namespace Draw.NET.Core
         public UserLayer GetNewUserLayer(string name = null)
         {
             if (IsDisposed)
+            {
                 return null;
+            }
             //待实现
             throw new NotImplementedException();
         }
@@ -375,7 +450,10 @@ namespace Draw.NET.Core
         public void RemoveShape(AbstractShape shape)
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             throw new NotImplementedException();
         }
         /// <summary>
@@ -387,7 +465,10 @@ namespace Draw.NET.Core
         public void AddShape(AbstractShape shape, string layerID = null, string layerName = null)
         {
             if (IsDisposed)
+            {
                 return;
+            }
+
             if (!string.IsNullOrWhiteSpace(layerID))
             {
                 __mouse.UserLayers.FirstOrDefault(l => l.UUID == layerID)?.Add(shape);
@@ -426,7 +507,10 @@ namespace Draw.NET.Core
             if (!string.IsNullOrWhiteSpace(shapeID))
             {
                 if (IsDisposed)
+                {
                     return null;
+                }
+
                 if (!string.IsNullOrWhiteSpace(layerID))
                 {
                     return __mouse.UserLayers.First(l => l.UUID == layerID).GetByID(shapeID);
@@ -477,13 +561,14 @@ namespace Draw.NET.Core
             {
                 Renderer.Configuration.ChangeSize(initialSize);
             }
-
             Renderer.MessageListener += AllMessageListener;
             __trans = new TransformManager(Renderer.Configuration);
             __bgLayer = new BackgroundLayer(Renderer.GetNewLayer(0, BackgroundLayer.NAME), initialSize);
             __mp = new MessagePipe(this);
-            var ul = new List<UserLayer>();
-            ul.Add(new UserLayer(Renderer.GetNewLayer(1, UserLayer.DEFAULT_NAME)));
+            var ul = new List<UserLayer>
+            {
+                new UserLayer(Renderer.GetNewLayer(1, UserLayer.DEFAULT_NAME))
+            };
             var ol = new OperationLayer(Renderer.GetNewLayer(99, OperationLayer.NAME), provider);
             __mouse = new MouseManager(ul, ol);
             __mouse.MessageListener += AllMessageListener;

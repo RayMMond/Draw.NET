@@ -29,6 +29,8 @@ namespace Draw.NET.Renderer.GDIPlus.Primitive
             PropertyChanged += GDI_Polygon_PropertyChanged;
         }
 
+        public GDI_Polygon() : this(new List<PointF>()) { }
+
 
         public override void Draw(object state)
         {

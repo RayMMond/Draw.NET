@@ -15,7 +15,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 
-namespace Draw.NET.Renderer
+namespace Draw.NET
 {
     /// <summary>
     /// 渲染器的配置
@@ -25,7 +25,7 @@ namespace Draw.NET.Renderer
         private bool disposedValue = false;
 
 
-        internal event EventHandler<SizeChangedEventArg> ClientSizeChanged;
+        public event EventHandler<SizeChangedEventArg> ClientSizeChanged;
 
 
         public RenderConfig() { }
@@ -124,7 +124,7 @@ namespace Draw.NET.Renderer
         FPSCustom
     }
 
-    internal class SizeChangedEventArg : EventArgs
+    public class SizeChangedEventArg : EventArgs
     {
         public readonly SizeF NewSize;
         public readonly SizeF OldSize;

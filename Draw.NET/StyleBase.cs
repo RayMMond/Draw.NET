@@ -15,7 +15,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace Draw.NET.Renderer.Styles
+namespace Draw.NET
 {
     public abstract class StyleBase : INotifyPropertyChanged, IDisposable
     {
